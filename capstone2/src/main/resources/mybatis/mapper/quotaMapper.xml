@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.spring.capstone2.quota.dao.IQuotaDAO">
+
+	<select id="selectQuota" resultType="QuotaDTO">
+		SELECT 
+    		quota_no,
+    		quota.company_no,
+    		company_kind,
+    		company_name,
+    		quota_year,
+    		quota_value,
+    		quota_valid_value
+		FROM
+    		quota
+        		JOIN
+    		companys ON quota.company_no = companys.company_no
+		WHERE
+    		quota_no = #{quotaNo};
+	</select>
+
+</mapper>

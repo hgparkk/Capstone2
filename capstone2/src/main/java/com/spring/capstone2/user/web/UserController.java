@@ -220,5 +220,4 @@ public class UserController {
 		request.setAttribute("url", "/");
 		return "alert";
 	}
-
 }

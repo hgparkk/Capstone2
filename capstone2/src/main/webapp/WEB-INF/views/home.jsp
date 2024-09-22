@@ -11,7 +11,10 @@
 </head>
 
 <body>
-	<%@ include file="/WEB-INF/inc/navbar.jsp"%>
+	<jsp:include page="/WEB-INF/inc/navbar.jsp">
+		<jsp:param value="true" name="buttonAble" />
+	</jsp:include>
+	
 	<section class="page-section">
 		<div class="container pt-5">
 			<div class="row justify-content-center">
@@ -35,7 +38,7 @@
 								<span class="drag-block dot">&#183;</span>탄소 시장과 탄소 배출권에 대한 이해
 							</div>
 							<div class="pt-1">
-								<span class="drag-block dot">&#183</span>탄소 시장 탄생 배경인 탄소 중립의 중요성과 의의 재확립
+								<span class="drag-block dot">&#183;</span>탄소 시장 탄생 배경인 탄소 중립의 중요성과 의의 재확립
 							</div>
 						</div>
 					</div>

@@ -16,10 +16,4 @@ public class HomeController {
 	public String carbonMarketIntro() {
 		return "carbonMarketIntro";
 	}
-	
-	@RequestMapping(value = "/simulationIntro", method=RequestMethod.GET)
-	public String simulationIntro() {
-		return "simulation/simulationIntro";
-	}
-
 }

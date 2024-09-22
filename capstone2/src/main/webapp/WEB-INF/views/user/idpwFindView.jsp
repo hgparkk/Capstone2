@@ -11,7 +11,10 @@
 </head>
 
 <body>
-	<%@ include file="/WEB-INF/inc/navbar.jsp"%>
+	<jsp:include page="/WEB-INF/inc/navbar.jsp">
+		<jsp:param value="true" name="buttonAble" />
+	</jsp:include>
+	
 	<section class="page-section">
 		<div class="container pt-5">
 			<div class="row justify-content-center">

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.spring.capstone2.kau.dao.IKAUDAO">
+
+	<select id="getCount" resultType="int">
+		SELECT COUNT(*)
+		FROM KAU
+		WHERE kau_kind = #{kauKind}
+	</select>
+	
+	<select id="selectKAU" parameterType="KAUselectDTO" resultType="KAUDTO">
+		SELECT
+			kau_no,
+			kau_kind,
+			kau_date,
+			kau_value
+		FROM
+			kau
+		WHERE
+			kau_kind = #{kauKind}
+		ORDER BY kau_date ASC
+		LIMIT #{kauSeq}, 1
+	</select>
+	
+	<select id="selectKAUByKAUNo" resultType="KAUDTO">
+		SELECT
+			kau_no,
+			kau_kind,
+			kau_date,
+			kau_value
+		FROM
+			kau
+		WHERE
+			kau_no = #{kauNo}
+	</select>
+	
+</mapper>

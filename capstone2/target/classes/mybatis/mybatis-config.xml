@@ -6,5 +6,8 @@
 	</settings>
 	<typeAliases>
 		<typeAlias type="com.spring.capstone2.user.dto.UserDTO" alias="UserDTO"/>
+		<typeAlias type="com.spring.capstone2.quota.dto.QuotaDTO" alias="QuotaDTO"/>
+		<typeAlias type="com.spring.capstone2.kau.dto.KAUDTO" alias="KAUDTO"/>
+		<typeAlias type="com.spring.capstone2.kau.dto.KAUselectDTO" alias="KAUselectDTO"/>
 	</typeAliases>
 </configuration>
