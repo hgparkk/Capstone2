@@ -37,3 +37,6 @@
 #### 개발 언어 : JAVA, HTML, CSS, JS
 #### IDE : Spring Tools Suites
 #### DBMS : MySQL
+
+### PPT 자료
+#### [스프링 프로젝트](https://docs.google.com/presentation/d/184EQ7l2QJPClm4_PyU_Zb6_BQGXaoEryLRbjxmhoxIs/edit#slide=id.p1)
