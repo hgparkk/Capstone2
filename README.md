@@ -1,11 +1,11 @@
 # 스프링 프로젝트
 ## 탄소 배출권 거래 시뮬레이션 웹사이트
 
-[프로젝트 개요](#intro)
-[기능](#function)
-[DB 설계](#database)
-[개발 환경](#inv)
-[PPT 자료](#ppt)
+### [1. 프로젝트 개요](#intro)
+### [1. 기능](#function)
+### [1. DB 설계](#database)
+### [1. 개발 환경](#inv)
+### [1. PPT 자료](#ppt)
 
 #intro
 
