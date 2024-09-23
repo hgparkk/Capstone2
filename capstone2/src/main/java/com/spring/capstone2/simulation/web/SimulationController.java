@@ -155,7 +155,7 @@ public class SimulationController {
 	public String simulationResult(HttpServletRequest request, Model model) {
 
 		// 플래시 속성 존재 여부 확인
-		if (!model.containsAttribute("simuNo") || !model.containsAttribute("quotaNo")
+		if (!model.containsAttribute("simuNo") || !model.containsAttribute("quota")
 				|| !model.containsAttribute("revenue") || !model.containsAttribute("totalValue")) {
 			request.setAttribute("msg", "잘못된 접근입니다.");
 			request.setAttribute("url", "/simulationIntro");
