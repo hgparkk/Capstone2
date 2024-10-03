@@ -12,9 +12,7 @@
     		quota_value,
     		quota_valid_value
 		FROM
-    		quota
-        		JOIN
-    		companys ON quota.company_no = companys.company_no
+    		quota JOIN companys ON quota.company_no = companys.company_no
 		WHERE
     		quota_no = #{quotaNo};
 	</select>

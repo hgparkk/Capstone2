@@ -56,7 +56,8 @@
 						</div>
 					</div>
 					<div class="d-flex justify-content-center">
-						<button id="simuStart" class="btn btn-primary btn-lg" type="button">시뮬레이션 시작</button>
+						<button id="simuStart" class="btn btn-primary btn-lg me-3" type="button">시뮬레이션 시작</button>
+						<button id="simulationLogView" class="btn btn-primary btn-lg ms-3" type="button">저장된 시뮬레이션 보기</button>
 					</div>
 				</div>
 			</div>
@@ -72,6 +73,17 @@
 				}
 			}else{
 				location.href = "${pageContext.request.contextPath}" + "/simulationSet"
+			}
+		})
+		
+		document.getElementById("simulationLogView").addEventListener("click",()=>{
+			let loginInfo = "${sessionScope.login.userId}"
+			if(loginInfo == ""){
+				if(confirm("로그인이 필요합니다.\n로그인 창으로 이동하시겠습니까?")){
+					location.href = "${pageContext.request.contextPath}" + "/loginView"
+				}
+			}else{
+				location.href = "${pageContext.request.contextPath}" + "/simulationLogView"
 			}
 		})
 	</script>

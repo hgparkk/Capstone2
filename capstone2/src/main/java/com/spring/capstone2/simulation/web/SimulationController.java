@@ -1,6 +1,7 @@
 package com.spring.capstone2.simulation.web;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,7 +10,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,6 +23,8 @@ import com.spring.capstone2.quota.service.QuotaService;
 import com.spring.capstone2.simulation.dto.SimulationDTO;
 import com.spring.capstone2.simulation.service.SimulationService;
 import com.spring.capstone2.simulationLog.dto.SimulationLogDTO;
+import com.spring.capstone2.simulationLog.service.SimulationLogService;
+import com.spring.capstone2.user.dto.UserDTO;
 
 @Controller
 public class SimulationController {
@@ -35,6 +37,9 @@ public class SimulationController {
 
 	@Autowired
 	SimulationService simulationService;
+
+	@Autowired
+	SimulationLogService simulationLogService;
 
 	// 시뮬레이션 안내 페이지로 이동
 	@RequestMapping(value = "/simulationIntro", method = RequestMethod.GET)
@@ -114,21 +119,23 @@ public class SimulationController {
 	public KAUDTO simulationNextDayDo(int simuNo, int kauNo, int simulogValue, String kauKind, int kauSeq,
 			HttpSession session) {
 
-		// 세션에 로그 추가
-		@SuppressWarnings("unchecked")
-		ArrayList<SimulationLogDTO> simulogList = (ArrayList<SimulationLogDTO>) session.getAttribute("simulogList");
+		if (simulogValue != 0) {
+			// 세션에 로그 추가
+			@SuppressWarnings("unchecked")
+			ArrayList<SimulationLogDTO> simulogList = (ArrayList<SimulationLogDTO>) session.getAttribute("simulogList");
 
-		// 새 로그 생성
-		SimulationLogDTO simulationLog = new SimulationLogDTO();
-		simulationLog.setSimuNo(simuNo);
-		simulationLog.setKauNo(kauNo);
-		simulationLog.setSimulogValue(simulogValue);
+			// 새 로그 생성
+			SimulationLogDTO simulationLog = new SimulationLogDTO();
+			simulationLog.setSimuNo(simuNo);
+			simulationLog.setKauNo(kauNo);
+			simulationLog.setSimulogValue(simulogValue);
 
-		// 새 로그 추가
-		simulogList.add(simulationLog);
+			// 새 로그 추가
+			simulogList.add(simulationLog);
 
-		// 새 로그 세션에 등록
-		session.setAttribute("simulogList", simulogList);
+			// 새 로그 세션에 등록
+			session.setAttribute("simulogList", simulogList);
+		}
 
 		KAUselectDTO kauSelect = new KAUselectDTO(kauKind, kauSeq + 1);
 
@@ -138,10 +145,18 @@ public class SimulationController {
 		return kau;
 	}
 
+	// 로그를 위한 시세 불러오기
+	@ResponseBody
+	@RequestMapping(value = "/getKAUforLog", method = RequestMethod.POST)
+	public KAUDTO getKAUforLog(int kauNo) {
+		return kauService.selectKAUByKAUNo(kauNo);
+	}
+
 	// 시뮬레이션 종료
 	@RequestMapping(value = "/simulationEnd", method = RequestMethod.POST)
-	public String simulationEnd(int simuNo, QuotaDTO quota, int simuRevenue, int simuFianlvalue, RedirectAttributes redirectAttributes) {
-		
+	public String simulationEnd(int simuNo, QuotaDTO quota, int simuRevenue, int simuFianlvalue,
+			RedirectAttributes redirectAttributes) {
+
 		// 시뮬레이션 결과를 넘긴다.
 		redirectAttributes.addFlashAttribute("simuNo", simuNo);
 		redirectAttributes.addFlashAttribute("quota", quota);
@@ -163,5 +178,57 @@ public class SimulationController {
 		}
 
 		return "simulation/simulationFinish";
+	}
+
+	// 시뮬레이션 저장
+	@RequestMapping(value = "/simulationSave", method = RequestMethod.POST)
+	public String simulationResult(SimulationDTO simulation, HttpServletRequest request, HttpSession session) {
+
+		if (simulation.getSimuAlias() == null || simulation.getSimuAlias().isEmpty()) {
+			Date now = new Date();
+			simulation.setSimuAlias(simulation.getCompanyName() + now.getTime() + "");
+		}
+
+		// 시뮬레이션 저장
+		simulationService.insertSimulation(simulation);
+
+		// 시뮬레이션 로그 불러와서 저장
+		@SuppressWarnings("unchecked")
+		ArrayList<SimulationLogDTO> simulogList = (ArrayList<SimulationLogDTO>) session.getAttribute("simulogList");
+
+		for (SimulationLogDTO simuLog : simulogList) {
+			simulationLogService.insertSimulationLog(simuLog);
+		}
+
+		request.setAttribute("msg", "시뮬레이션이 저장되었습니다.");
+		request.setAttribute("url", "/simulationIntro");
+		return "alert";
+	}
+
+	// 저장된 시뮬레이션 보기 페이지
+	@RequestMapping(value = "/simulationLogView", method = RequestMethod.GET)
+	public String simulationLogView(Model model, HttpSession session) {
+
+		UserDTO login = (UserDTO) session.getAttribute("login");
+
+		List<SimulationDTO> simulationList = simulationService.selectSimulationList(login.getUserId());
+
+		model.addAttribute("simulationList", simulationList);
+
+		return "simulation/simulationLogView";
+	}
+
+	// 시뮬레이션 로그 페이지
+	@RequestMapping(value = "/simulationLogDetailView", method = RequestMethod.GET)
+	public String simulationLogDetailView(int simuNo, Model model) {
+
+		SimulationDTO simulation = simulationService.selectSimulation(simuNo);
+
+		List<SimulationLogDTO> simulationLogList = simulationLogService.selectSimulationLog(simuNo);
+
+		model.addAttribute("simulation", simulation);
+		model.addAttribute("simulationLogList", simulationLogList);
+
+		return "simulation/simulationLogDetailView";
 	}
 }

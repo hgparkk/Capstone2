@@ -9,5 +9,7 @@
 		<typeAlias type="com.spring.capstone2.quota.dto.QuotaDTO" alias="QuotaDTO"/>
 		<typeAlias type="com.spring.capstone2.kau.dto.KAUDTO" alias="KAUDTO"/>
 		<typeAlias type="com.spring.capstone2.kau.dto.KAUselectDTO" alias="KAUselectDTO"/>
+		<typeAlias type="com.spring.capstone2.simulation.dto.SimulationDTO" alias="SimulationDTO"/>
+		<typeAlias type="com.spring.capstone2.simulationLog.dto.SimulationLogDTO" alias="SimulationLogDTO"/>
 	</typeAliases>
 </configuration>

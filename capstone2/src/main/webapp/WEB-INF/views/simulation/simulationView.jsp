@@ -23,76 +23,92 @@
 					<jsp:param value="시뮬레이션" name="title" />
 					<jsp:param value="false" name="borderShow" />
 				</jsp:include>
-				<div class="d-flex justify-content-center">
-					<span class="fs-5 text-danger">다음 날로 넘기면 다시 이전 날로 되돌아 갈 수 없습니다. 주의하여 주세요.</span>
-				</div>
-				<div class="col-lg-8 col-xl-7 mt-5">
-					<div class="fs-3">현재 기업 : ${quota.companyName} (${quota.companyKind})</div>
-					<div class="fs-4">
-						초과 및 잉여 탄소 배출량 :
-						<span id="finalTotalValue">${quota.quotaValue - quota.quotaValidValue}</span>
-						(톤)
-					</div>
-					<div>(음수는 초과 배출량, 양수는 잉여 배출량 입니다)</div>
-					<div class="banner"></div>
-					<div class="mt-3 mb-3 fs-5">
-						현재 탄소배출권 시세 :
-						<span id="kauValue">${kau.kauValue}</span>
-						(원) (
-						<span id="kauDef" class="text-secondary">-</span>
-						)
-					</div>
-					<div class="mt-3 mb-3">
-						현재 날짜 :
-						<span id="currentDate">
-							<fmt:formatDate value="${kau.kauDate}" pattern="MM월 dd일 E" />
-						</span>
-					</div>
-					<div class="mt-3 mb-3">
-						시뮬레이션이 종료될 때까지 남은 거래일 :
-						<span id="leftDay">${kauCount-kauSelect.kauSeq}</span>
-						일
-					</div>
-					<div class="mt-3 mb-3">
-						총 수익 :
-						<span id="revenue">0</span>
-						(원)
-					</div>
-					<div class="mt-5 mb-5">
-						<div class="mt-3 mb-3">
-							매매량 입력 (톤)
-							<span class="text-danger"> (한번 매매시 매매 버튼이 비활성화 됩니다. 주의하여 주세요.) </span>
+				<div class="d-flex">
+					<div class="d-flex flex-column col-8">
+						<div class="d-flex justify-content-center">
+							<span class="fs-5 text-danger">다음 날로 넘기면 다시 이전 날로 되돌아 갈 수 없습니다. 주의하여 주세요.</span>
 						</div>
-						<div class="d-flex flex-column align-items-center">
-							<div class="d-flex" style="width: 400px;">
-								<div style="width: 150px;">
-									<div class="form-check">
-										<input id="buySelect" class="form-check-input" type="radio" name="buySellSelect" value="buy">
-										<label class="form-check-label" for="buySelect">구매</label>
+						<div class="mt-5 d-flex flex-column align-items-center">
+							<div class="fs-3">현재 기업 : ${quota.companyName} (${quota.companyKind})</div>
+							<div class="fs-4">
+								초과 및 잉여 탄소 배출량 :
+								<span id="finalTotalValue">${quota.quotaValue - quota.quotaValidValue}</span>
+								(톤)
+							</div>
+							<div>(음수는 초과 배출량, 양수는 잉여 배출량 입니다)</div>
+							<div class="banner"></div>
+							<div class="mt-3 mb-3 fs-5">
+								현재 탄소배출권 시세 :
+								<span id="kauValue">${kau.kauValue}</span>
+								(원) (
+								<span id="kauDef" class="text-secondary">-</span>
+								)
+							</div>
+							<div class="mt-3 mb-3">
+								현재 날짜 :
+								<span id="currentDate">
+									<fmt:formatDate value="${kau.kauDate}" pattern="MM월 dd일 E" />
+								</span>
+							</div>
+							<div class="mt-3 mb-3">
+								시뮬레이션이 종료될 때까지 남은 거래일 :
+								<span id="leftDay">${kauCount-kauSelect.kauSeq}</span>
+								일
+							</div>
+							<div class="mt-3 mb-3">
+								총 수익 :
+								<span id="revenue">0</span>
+								(원)
+							</div>
+							<div class="mt-5 mb-5">
+								<div class="mt-3 mb-3">
+									매매량 입력 (톤)
+									<span class="text-danger"> (한번 매매시 매매 버튼이 비활성화 됩니다. 주의하여 주세요.) </span>
+								</div>
+								<div class="d-flex flex-column align-items-center">
+									<div class="d-flex" style="width: 400px;">
+										<div style="width: 150px;">
+											<div class="form-check">
+												<input id="buySelect" class="form-check-input" type="radio" name="buySellSelect" value="buy">
+												<label class="form-check-label" for="buySelect">구매</label>
+											</div>
+											<div class="form-check">
+												<input id="sellSelect" class="form-check-input" type="radio" name="buySellSelect" value="sell">
+												<label class="form-check-label" for="sellSelect">판매</label>
+											</div>
+										</div>
+										<input id="inputSimuLogValue" type="number" class="form-control">
+										<button id="buySellButton" class="btn btn-outline-secondary" type="button" style="width: 80px;">매매</button>
 									</div>
-									<div class="form-check">
-										<input id="sellSelect" class="form-check-input" type="radio" name="buySellSelect" value="sell">
-										<label class="form-check-label" for="sellSelect">판매</label>
+									<div class="mt-3 mb-3">
+										<button id="simulationNextDayDo" class="btn btn-light btn-outline-dark" type="button">다음날로</button>
+									</div>
+									<form id="simulationEnd" action="<c:url value="/simulationEnd" />" method="POST">
+										<input type="hidden" name="simuNo" value="${simuNo}" />
+										<input type="hidden" name="companyName" value="${quota.companyName}">
+										<input type="hidden" name="companyKind" value="${quota.companyKind}">
+										<input type="hidden" name="quotaNo" value="${quota.quotaNo}" />
+										<input id="simuRevenue" type="hidden" name="simuRevenue" />
+										<input id="simuFianlvalue" type="hidden" name="simuFianlvalue" />
+									</form>
+									<div class="mt-3 mb-3">
+										<button id="simulationEndBtn" class="btn btn-light btn-outline-dark" type="button">시뮬레이션 종료</button>
 									</div>
 								</div>
-								<input id="inputSimuLogValue" type="number" class="form-control">
-								<button id="buySellButton" class="btn btn-outline-secondary" type="button" style="width: 80px;">매매</button>
-							</div>
-							<div class="mt-3 mb-3">
-								<button id="simulationNextDayDo" class="btn btn-light btn-outline-dark" type="button">다음날로</button>
-							</div>
-							<form id="simulationEnd" action="<c:url value="/simulationEnd" />" method="POST">
-								<input type="hidden" name="simuNo" value="${simuNo}" />
-								<input type="hidden" name="companyName" value="${quota.companyName}">
-								<input type="hidden" name="companyKind" value="${quota.companyKind}">
-								<input type="hidden" name="quotaNo" value="${quota.quotaNo}" />
-								<input id="simuRevenue" type="hidden" name="simuRevenue" />
-								<input id="simuFianlvalue" type="hidden" name="simuFianlvalue" />
-							</form>
-							<div class="mt-3 mb-3">
-								<button id="simulationEndBtn" class="btn btn-light btn-outline-dark" type="button">시뮬레이션 종료</button>
 							</div>
 						</div>
+					</div>
+					<div class="d-flex flex-column align-items-center col-4">
+						<span class="mb-3 fw-6 fw-bold">시뮬레이션 로그</span>
+						<table id="simulationLog">
+							<tr>
+								<th><span class="ms-2 me-2">거래일</span></th>
+								<th><span class="ms-2 me-2">거래가격</span></th>
+								<th><span class="ms-2 me-2">거래량</span></th>
+								<th><span class="ms-2 me-2">수익변동량</span></th>
+							</tr>
+						</table>
+						<span id="noLogNotice">등록된 로그가 없습니다.</span>
 					</div>
 				</div>
 			</div>
@@ -141,7 +157,12 @@
 		
 		// 수익 3자리 , 표시 함수화 
 		function revenueSet(curRevenue){
-			document.getElementById("revenue").innerHTML = curRevenue.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")	
+			if(curRevenue > 0){
+				document.getElementById("revenue").classList.add("text-success")
+			}else if(curRevenue < 0){
+				document.getElementById("revenue").classList.add("text-danger")
+			}
+			document.getElementById("revenue").innerHTML = curRevenue.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
 		}
 		
 		revenueSet(v_revenue);
@@ -198,6 +219,7 @@
 		
 		// 다음날 행동 url
 		const v_nextDayDoUrl = "<c:url value='/simulationNextDayDo' />"
+		const v_getKAUforLogUrl = "<c:url value='/getKAUforLog' />"
 		
 		// 다음날 버튼 행동
 		document.getElementById("simulationNextDayDo").addEventListener("click",()=>{
@@ -206,11 +228,60 @@
 				url: v_nextDayDoUrl,
 				data: { "simuNo" : v_simuNo, "kauNo" : v_kauNo, "simulogValue" : v_simuLogValue, "kauKind" : v_kauKind, "kauSeq" : v_kauSeq },
 				success: function(result){
-					if(v_kauSeq == v_kauCount){
+					if(v_kauSeq == v_kauCount - 1){
 						document.getElementById("simuRevenue").value = v_revenue
 						document.getElementById("simuFianlvalue").value = parseInt(${quota.quotaValue - quota.quotaValidValue} + v_totalValue)
 				
 						document.getElementById("simulationEnd").submit()
+					}
+					
+					// 로그 만들기
+					if(v_simuLogValue != 0){
+						document.getElementById("noLogNotice").innerHTML = ""
+						$.ajax({
+							type:'POST',
+							url: v_getKAUforLogUrl,
+							data: {"kauNo":v_kauNo},
+							success: function(result){
+								const date = new Date(result["kauDate"])
+								let dateString = ((date.getMonth() + 1) + "").padStart(2,"0") + "월 " + ((date.getDate()) + "").padStart(2,"0") + "일 "
+								if(date.getDay() == 0){
+									dateString +="일"
+								}else if(date.getDay() == 1){
+									dateString +="월"
+								}else if(date.getDay() == 2){
+									dateString +="화"
+								}else if(date.getDay() == 3){
+									dateString +="수"
+								}else if(date.getDay() == 4){
+									dateString +="목"
+								}else if(date.getDay() == 5){
+									dateString +="금"
+								}else{
+									dateString +="토"
+								}
+								
+								let v_change = (parseInt(result["kauValue"]) * parseInt(v_simuLogValue)) * -1
+								
+								v_changeString = ""
+								
+								if(v_change > 0){
+									v_change = v_change.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,",")
+									v_change = "+" + v_change
+									v_changeString = '</span></td><td><span class="ms-2 me-2 text-success">'+ v_change + " (원)" + '</span></th></tr>'
+								}else if(v_change == 0){
+									v_change = v_change.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,",")
+									v_changeString = '</span></td><td><span class="ms-2 me-2">'+ v_change + " (원)" +'</span></th></tr>'
+								}else{
+									v_change = v_change.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,",")
+									v_changeString = '</span></td><td><span class="ms-2 me-2 text-danger">'+ v_change + " (원)" +'</span></th></tr>'
+								}
+								
+								document.getElementById("simulationLog").innerHTML += '<tr> <td><span class="ms-2 me-2">'+ dateString +
+								'</span></td><td><span class="ms-2 me-2">'+ result["kauValue"] +
+								'</span></td><td><span class="ms-2 me-2">'+ v_simuLogValue + v_changeString
+							}
+						})
 					}
 					
 					// 초과 및 잉여 탄소 배출량에 있는 클래스 전부 지우기
@@ -222,6 +293,11 @@
 					v_kauDef.classList.remove("text-success")
 					v_kauDef.classList.remove("text-secondary")
 					v_kauDef.classList.remove("text-danger")
+					
+					// 수익에 있는 클래스 전부 지우기
+					document.getElementById("revenue").classList.remove("text-success")
+					document.getElementById("revenue").classList.remove("text-secondary")
+					document.getElementById("revenue").classList.remove("text-danger")
 					
 					// 초과 및 잉여 탄소 배출량 수치 바꾸기
 					v_finalTotalValue = parseInt(${quota.quotaValue - quota.quotaValidValue} + v_totalValue)
@@ -307,6 +383,7 @@
 		
 		document.getElementById("simulationEndBtn").addEventListener("click",()=>{
 			if(confirm("시뮬레이션을 종료하시겠습니까?\n(현재까지 한 기록으로 시뮬레이션을 종료합니다.)")){
+				v_simuLogValue = 0
 				$.ajax({
 					type:'POST',
 					url: v_nextDayDoUrl,

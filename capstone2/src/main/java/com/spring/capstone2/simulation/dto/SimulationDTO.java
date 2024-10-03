@@ -15,7 +15,8 @@ public class SimulationDTO {
 	private int simuNo;
 	private String userId;
 	private int quotaNo;
-	private String company_name;
+	private String companyName;
+	private String companyKind;
 	private String simuAlias;
 	private int simuRevenue;
 	private int simuValue;

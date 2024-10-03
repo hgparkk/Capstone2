@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.spring.capstone2.simulation.dao.ISimulationDAO">
+
+	<select id="getCount" resultType="int">
+		SELECT COUNT(*)
+		FROM simulation
+	</select>
+	
+	<insert id="insertSimulation" parameterType="SimulationDTO">
+		INSERT INTO simulation(
+			simu_no,
+			user_id,
+			quota_no,
+			simu_alias,
+			simu_revenue,
+			simu_value
+		) VALUES (
+			#{simuNo},
+			#{userId},
+			#{quotaNo},
+			#{simuAlias},
+			#{simuRevenue},
+			#{simuValue}
+		)
+	</insert>
+	
+	<select id="selectSimulationList" parameterType="String" resultType="SimulationDTO">
+		SELECT
+			simu_no,
+			user_id,
+			simulation.quota_no,
+			companys.company_name,
+			simu_alias,
+			simu_revenue,
+			simu_value
+		FROM 
+			simulation JOIN (quota JOIN companys ON quota.company_no = companys.company_no) ON quota.quota_no = simulation.quota_no
+		WHERE
+			user_id = #{userId}
+	</select>
+	
+	<select id="selectSimulation" parameterType="int" resultType="SimulationDTO">
+		SELECT
+			simu_no,
+			user_id,
+			simulation.quota_no,
+			companys.company_kind,
+			companys.company_name,
+			simu_alias,
+			simu_revenue,
+			simu_value
+		FROM 
+			simulation JOIN (quota JOIN companys ON quota.company_no = companys.company_no) ON quota.quota_no = simulation.quota_no
+		WHERE
+			simu_no = ${simuNo}
+	</select>
+	
+</mapper>

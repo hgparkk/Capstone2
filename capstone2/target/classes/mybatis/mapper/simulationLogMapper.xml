@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.spring.capstone2.simulationLog.dao.ISimulationLogDAO">
+
+	<insert id="insertSimulationLog" parameterType="SimulationLogDTO">
+		INSERT INTO simulationlog(
+			simu_no,
+			kau_no,
+			simulog_value
+		) VALUES (
+			#{simuNo},
+			#{kauNo},
+			#{simulogValue}
+		)
+	</insert>
+	
+	<select id="selectSimulationLog" parameterType="int" resultType="SimulationLogDTO">
+		SELECT
+			simulog_no,
+			kau.kau_date,
+			kau.kau_value,
+			simulog_value
+		FROM
+			simulationlog JOIN kau ON simulationlog.kau_no = kau.kau_no
+		WHERE
+			simu_no = #{simuNo}
+	</select>
+	
+</mapper>
