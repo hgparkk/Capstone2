@@ -36,7 +36,9 @@
 								(톤)
 							</div>
 							<div>(음수는 초과 배출량, 양수는 잉여 배출량 입니다)</div>
-							<div class="banner"></div>
+							<div class="banner">
+								<img id="kauGraph" style="height:400px;">
+							</div>
 							<div class="mt-3 mb-3 fs-5">
 								현재 탄소배출권 시세 :
 								<span id="kauValue">${kau.kauValue}</span>
@@ -120,7 +122,7 @@
 		const v_simuNo = ${simuNo}
 	
 		// 해당 종목의 총 거래일
-		const v_kauCount = ${kauCount}
+		const v_kauCount = ${kauCount} -1
 		
 		// 현재 종목
 		const v_kauKind = "${kauSelect.kauKind}"
@@ -217,6 +219,32 @@
 			buySellButton.disabled = true
 		})
 		
+		// 시세가 저장될 배열
+		v_kauList = [v_kauValue]
+		
+		// 그래프 그리기
+		function drawGraph(kauList){
+			let x_lim = v_kauCount + 1
+			$.ajax({
+	            url: "http://localhost:5000/plot",  // Flask 서버의 엔드포인트
+	            type: "POST",
+	            contentType: "application/json",
+	            data: JSON.stringify({ "y_data": kauList, "x_lim" : x_lim }),  // JSON으로 리스트 전송
+	            success: function(response) {
+	                // 응답받은 데이터에서 base64 이미지를 가져옴
+	                var imageBase64 = response.image;
+	                
+	                // 이미지 태그에 base64 데이터를 삽입하여 이미지 표시
+	                $("#kauGraph").attr("src", "data:image/png;base64," + imageBase64);
+	            },
+	            error: function(xhr, status, error) {
+	                console.error("AJAX 요청 실패:", error);
+	            }
+	        });
+		}
+		
+		drawGraph(v_kauList);
+		
 		// 다음날 행동 url
 		const v_nextDayDoUrl = "<c:url value='/simulationNextDayDo' />"
 		const v_getKAUforLogUrl = "<c:url value='/getKAUforLog' />"
@@ -228,7 +256,9 @@
 				url: v_nextDayDoUrl,
 				data: { "simuNo" : v_simuNo, "kauNo" : v_kauNo, "simulogValue" : v_simuLogValue, "kauKind" : v_kauKind, "kauSeq" : v_kauSeq },
 				success: function(result){
-					if(v_kauSeq == v_kauCount - 1){
+					console.log(v_kauSeq)
+					console.log(v_kauCount-1)
+					if(v_kauSeq == v_kauCount - 2){
 						document.getElementById("simuRevenue").value = v_revenue
 						document.getElementById("simuFianlvalue").value = parseInt(${quota.quotaValue - quota.quotaValidValue} + v_totalValue)
 				
@@ -377,6 +407,10 @@
 						buySellSelect[i].disabled = false
 					}
 					buySellButton.disabled = false
+					
+					v_kauList.push(result["kauValue"])
+					
+					drawGraph(v_kauList);
 				}
 			})
 		})

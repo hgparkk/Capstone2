@@ -12,4 +12,5 @@ public interface ISimulationDAO {
 	public int insertSimulation(SimulationDTO simulation);
 	public List<SimulationDTO> selectSimulationList(String userId);
 	public SimulationDTO selectSimulation(int simuNo);
+	public int deleteSimulation(int simuNo);
 }

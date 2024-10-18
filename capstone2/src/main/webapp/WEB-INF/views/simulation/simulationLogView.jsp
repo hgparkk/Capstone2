@@ -31,6 +31,7 @@
 								<th class="col">시뮬레이션 이름</th>
 								<th class="col">총 수익</th>
 								<th class="col">최종 탄소배출 허용량</th>
+								<th class="col"></th>
 							</thead>
 							<tbody>
 								<c:forEach items="${simulationList}" var="simulation">
@@ -39,6 +40,7 @@
 										<td><a href="<c:url value="/simulationLogDetailView?simuNo=${simulation.simuNo}" />">${simulation.simuAlias}</a></td>
 										<td>${simulation.simuRevenue}</td>
 										<td>${simulation.simuValue}</td>
+										<td><button onclick="logDelete(${simulation.simuNo})">로그 삭제</button></td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -49,6 +51,23 @@
 		</div>
 	</section>
 	<div class="bottom"></div>
+	<script>
+		let v_deleteUrl = '<c:url value="/simulationDeleteDo" />'
+	
+		function logDelete(simuNo){
+			if(confirm("저장된 시뮬레이션을 삭제하시겠습니까?")){
+				$.ajax({
+					type:'POST',
+					url: v_deleteUrl,
+					data: { "simuNo" : simuNo },
+					success: function(){
+						alert("시뮬레이션이 삭제되었습니다.")
+						location.replace("${pageContext.request.contextPath}" + "/simulationLogView")
+					}
+				})
+			}
+		}
+	</script>
 </body>
 
 </html>

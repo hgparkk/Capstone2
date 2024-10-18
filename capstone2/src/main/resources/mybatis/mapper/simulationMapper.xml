@@ -53,7 +53,14 @@
 		FROM 
 			simulation JOIN (quota JOIN companys ON quota.company_no = companys.company_no) ON quota.quota_no = simulation.quota_no
 		WHERE
-			simu_no = ${simuNo}
+			simu_no = #{simuNo}
 	</select>
+	
+	<delete id="deleteSimulation" parameterType="int">
+		DELETE FROM
+			simulation
+		WHERE
+			simu_no = #{simuNo}
+	</delete>
 	
 </mapper>

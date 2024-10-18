@@ -29,4 +29,8 @@ public class SimulationService {
 	public SimulationDTO selectSimulation(int simuNo) {
 		return dao.selectSimulation(simuNo);
 	}
+	
+	public int deleteSimulation(int simuNo) {
+		return dao.deleteSimulation(simuNo);
+	}
 }

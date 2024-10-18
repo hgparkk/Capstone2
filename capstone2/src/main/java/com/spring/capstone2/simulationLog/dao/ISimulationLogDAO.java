@@ -9,5 +9,6 @@ import com.spring.capstone2.simulationLog.dto.SimulationLogDTO;
 @Mapper
 public interface ISimulationLogDAO {
 	public int insertSimulationLog(SimulationLogDTO simulationLog);
-	List<SimulationLogDTO> selectSimulationLog(int simuNo);
+	public List<SimulationLogDTO> selectSimulationLog(int simuNo);
+	public int deleteSimulationLog(int simuNo);
 }

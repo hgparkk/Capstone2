@@ -26,4 +26,11 @@
 			simu_no = #{simuNo}
 	</select>
 	
+	<delete id="deleteSimulationLog" parameterType="int">
+		DELETE FROM
+			simulationlog
+		WHERE
+			simu_no = #{simuNo}
+	</delete>
+	
 </mapper>

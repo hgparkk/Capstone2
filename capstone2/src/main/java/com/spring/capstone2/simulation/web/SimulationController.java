@@ -87,6 +87,14 @@ public class SimulationController {
 
 		// 종목의 시세를 불러온다.
 		KAUDTO kau = kauService.selectKAU(kauSelect);
+        
+        // 그래프를 그리기위한 시세 리스트
+        List<Integer> kauValueList = new ArrayList<>();
+        
+        kauValueList.add(kau.getKauValue());
+        
+        // 시세 그래프를 위한 시세 데이터 세션에 등록
+        session.setAttribute("kauValueList", kauValueList);
 
 		// 세팅을 넘긴다.
 		redirectAttributes.addFlashAttribute("simuNo", simuNo);
@@ -141,6 +149,15 @@ public class SimulationController {
 
 		// 오늘 시세 가져오기
 		KAUDTO kau = kauService.selectKAU(kauSelect);
+
+        // 그래프를 그리기위한 시세 리스트
+     	@SuppressWarnings("unchecked")
+     	ArrayList<Integer> kauValueList = (ArrayList<Integer>) session.getAttribute("kauValueList");
+        
+        kauValueList.add(kau.getKauValue());
+        
+        // 시세 그래프를 위한 시세 데이터 세션에 등록
+        session.setAttribute("kauValueList", kauValueList);
 
 		return kau;
 	}
@@ -230,5 +247,16 @@ public class SimulationController {
 		model.addAttribute("simulationLogList", simulationLogList);
 
 		return "simulation/simulationLogDetailView";
+	}
+	
+	// 시뮬레이션 삭제
+	@ResponseBody
+	@RequestMapping(value="/simulationDeleteDo", method=RequestMethod.POST)
+	public String simulationLogDelete(int simuNo, HttpServletRequest request) {
+		
+		simulationLogService.deleteSimulationLog(simuNo);
+		simulationService.deleteSimulation(simuNo);
+		
+		return "";
 	}
 }

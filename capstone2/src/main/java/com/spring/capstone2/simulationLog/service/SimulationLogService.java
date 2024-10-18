@@ -21,4 +21,8 @@ public class SimulationLogService {
 	public List<SimulationLogDTO> selectSimulationLog(int simuNo){
 		return dao.selectSimulationLog(simuNo);
 	}
+	
+	public int deleteSimulationLog(int simuNo) {
+		return dao.deleteSimulationLog(simuNo);
+	}
 }
